@@ -5,6 +5,7 @@ RUN apk add --update build-base \
         nodejs-current \
         imagemagick \
         tzdata \
+        python \
         yarn \
         git
 
