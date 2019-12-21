@@ -9,6 +9,7 @@ RUN apk add --update build-base \
         yarn \
         git
 
-RUN gem install bundler
+RUN gem install bundler \
+    gem install foreman
 
 WORKDIR /app
