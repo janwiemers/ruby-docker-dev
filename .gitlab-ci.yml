@@ -25,6 +25,13 @@ services:
 build:
   image: jdrouet/docker-with-buildx:stable
   stage: build
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker buildx create --use
-    - docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag your-username/multiarch-example:gitlab .
+    - docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag $IMAGE_TAG .
+    - docker push $IMAGE_TAG
