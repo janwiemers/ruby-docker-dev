@@ -7,7 +7,23 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
 - test
+- best
+
 sast:
   stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
+  include:
+  - template: Security/SAST.gitlab-ci.yml
+
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+
+services:
+  - docker:dind
+
+build:
+  image: jdrouet/docker-with-buildx:stable
+  stage: build
+  script:
+    - docker buildx create --use
+    - docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag your-username/multiarch-example:gitlab .
